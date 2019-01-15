@@ -6,14 +6,12 @@ var isGridDrawn;
 
 function setup() {
     createCanvas(TOTAL_LENGTH, TOTAL_LENGTH);
-    isGridDrawn = false;
+    drawGrid();
+
 }
 
 function draw() {
-    if (!isGridDrawn) {
-        drawGrid();
-        isGridDrawn = true;
-    }
+
 }
 
 function drawGrid() {
@@ -24,7 +22,7 @@ function drawGrid() {
             setTimeout(() => {
                 console.log(x, y, GRID_SIDE_LENGTH)
                 drawTile(x, y, ((x + (y % 2 == 0 ? 1 : 0)) % 2) * 255);
-            }, ((y * GRID_SIDE_LENGTH) + x) * 20)
+            }, ((y * GRID_SIDE_LENGTH) + x) * 15)
         }
     }
 }
