@@ -9,17 +9,17 @@ var app = express();
 
 try{
     app.use(express.static('public'))
-    var server = app.listen(3000);
+    var server = app.listen(3000, listenCallback);
 }
 catch(e){
     console.log(e);
 }
 
-// // This call back just tells us that the server has started
-// function listenCallback() {
-//   var host = server.address().address;
-//   var port = server.address().port;
-//   console.log('Example app listening at http://' + host + ':' + port);
-// }
+// This call back just tells us that the server has started
+function listenCallback() {
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log('Example app listening at http://' + host + ':' + port);
+}
 
 console.log("runn")
