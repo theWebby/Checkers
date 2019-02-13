@@ -9,7 +9,7 @@ var app = express();
 
 try{
     app.use(express.static('public'))
-    var server = app.listen(3000, listenCallback);
+    var server = app.listen(80, listenCallback);
 }
 catch(e){
     console.log(e);
