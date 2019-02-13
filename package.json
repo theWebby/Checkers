@@ -1,0 +1,24 @@
+{
+  "name": "checkers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "main": "node src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theWebby/Checkers.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theWebby/Checkers/issues"
+  },
+  "homepage": "https://github.com/theWebby/Checkers#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "serve-static": "^1.13.2"
+  }
+}
