@@ -3,6 +3,7 @@ class Player {
         this.isnNpc = isnNpc;
         this.color = color;
         this.pieces = [];
+        this.isTurn = !isnNpc;
         this.setupPieces();
     }
 

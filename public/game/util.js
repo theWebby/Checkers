@@ -1,6 +1,5 @@
 class MouseHandler {
-    
-    static mousePressHandler(){
+    static getMouseGridXY(){
         var gridX = Math.floor(mouseX / TILE_SIDE_LENGTH);
         var gridY = Math.floor(mouseY / TILE_SIDE_LENGTH);
         

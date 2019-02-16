@@ -5,37 +5,35 @@ const GRID_SIDE_LENGTH = 8;
 const GRID_DRAW_SPEED = 0;
 const GRID_CHAR = '_';
 const TOTAL_LENGTH = TILE_SIDE_LENGTH * GRID_SIDE_LENGTH;
-
-var player1, player2, map;
+const log = console.log;
+var player1, player2, map, gameSetup = false, player1sTurn = true;
 
 async function setup() {
     createCanvas(TOTAL_LENGTH + 1, TOTAL_LENGTH + 1);
-    await drawGrid(true);
+    Board.drawGrid(true);
     await setupGame();
+    gameSetup = true;
 }
 
-function draw() {
-    // updateBoard();
+async function draw() {
+    if (!gameSetup){
+        return;
+    }
+
+    map.detectHover();
 }
 
 
 async function setupGame(){
-    map = new Board();
-    player1 = new Player(color(255, 0,0), false);
-    player2 = new Player(color(255, 255, 255), true);
+    return _setTimeout(() => {
+        map = new Board();
+        player1 = new Player(color(255, 0,0), false);
+        player2 = new Player(color(255, 255, 255), true);
+    }, 0)
+
 }
 
-async function drawGrid(slow) {
-    fill(0)
-    rect(0, 0, TOTAL_LENGTH + 1, TOTAL_LENGTH + 1)
-    for (let y = 0; y < GRID_SIDE_LENGTH; y++) {
-        for (let x = 0; x < GRID_SIDE_LENGTH; x++) {
-            await _setTimeout(() => {
-                Board.drawTile(x, y, tileColor(x, y));
-            }, slow ? GRID_DRAW_SPEED : 0) //(y * GRID_SIDE_LENGTH) + x) * 
-        }
-    }
-}
+
 
 function tileColor(x, y){
     var black = 0;
