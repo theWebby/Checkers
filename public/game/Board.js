@@ -5,6 +5,7 @@ class Board {
         this.isPlayer1sTurn = true;
         this.needsUpdate = false;
         this.setupMap();
+        this.lastHoverPiece;
     }
     
     setupMap() {
@@ -31,21 +32,32 @@ class Board {
         rect(x * TILE_SIDE_LENGTH, y * TILE_SIDE_LENGTH, TILE_SIDE_LENGTH, TILE_SIDE_LENGTH);
     }
 
-    getMouseOverPiece(){
-        var selectedPiece;
+    getMouseOverGrid(){
+        var gridContent;
         var mouseEvent = MouseHandler.getMouseGridXY();
         
         if (!mouseEvent.isValid){
             return;
         }
 
-        selectedPiece = this.map[mouseEvent.gridY][mouseEvent.gridX];
-        if (selectedPiece == GRID_CHAR){
+        gridContent = this.map[mouseEvent.gridY][mouseEvent.gridX];
+        return gridContent;
+    }
+
+    getMouseOverPiece(){
+        var gridContent = this.getMouseOverGrid();     
+
+        if (!gridContent){
             return false;
         }
 
-        return selectedPiece;
+        if (gridContent == GRID_CHAR){
+            return false;
+        }
+
+        return gridContent;
     }
+
 
     selectedPiece(fn) {
         var selectedPiece = this.getMouseOverPiece()
@@ -60,10 +72,34 @@ class Board {
         })
     }
 
+    clearLastHover(newHoverPiece){
+        if (this.lastHoverPiece){
+            this.lastHoverPiece.removePossiblePlays();
+        }
+        
+        this.lastHoverPiece = newHoverPiece;
+    }
+
     detectHover() {
-        this.selectedPiece((selectedPiece) => {
-            console.log(selectedPiece.x, selectedPiece.y);
-        })
+        var selectedContent = this.getMouseOverGrid();
+
+        if (!selectedContent){
+            return;
+        }
+        if (selectedContent == GRID_CHAR){
+            this.clearLastHover()
+            return;
+        }
+
+        //content must be piece
+        if(this.lastHoverPiece == selectedContent){
+            return;
+        }
+
+        
+        this.clearLastHover(selectedContent)
+        selectedContent.drawPossiblePlays(this.map);
+
     }
 
     movePiece(selectedPiece, dx, dy){

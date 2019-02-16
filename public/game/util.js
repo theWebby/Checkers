@@ -4,14 +4,14 @@ class MouseHandler {
         var gridY = Math.floor(mouseY / TILE_SIDE_LENGTH);
         
         return {
-            isValid: this.validClick(gridX, gridY),
+            isValid: this.validXY(gridX, gridY),
             gridX: gridX,
             gridY: gridY
         }
         
     }
 
-    static validClick(gridX, gridY){
+    static validXY(gridX, gridY){
         if (gridX >= GRID_SIDE_LENGTH || gridX < 0){
             return false;
         }
