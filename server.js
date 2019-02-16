@@ -1,25 +1,25 @@
-var express = require('express');
-// var serveStatic = require('serve-static')
-// Create the app
-var app = express();
-
-// Set up the server
-// process.env.PORT is related to deploying on heroku
-// app.use(serveStatic('public', {'index': 'index.html'}));
-
 try{
+    var express = require('express');
+    var app = express();
+
     app.use(express.static('public'))
     var server = app.listen(80, listenCallback);
+   
+    function listenCallback() {
+        var host = server.address().address;
+        var port = server.address().port;
+        console.log('Example app listening at http://' + host + ':' + port);
+    }
+    console.log("runn")    
+    
 }
 catch(e){
     console.log(e);
-}
+    var fs = require('fs');
+    var util = require('util');
+    var log_file = fs.createWriteStream(__dirname + '/debug.log', {flags : 'w'});
 
-// This call back just tells us that the server has started
-function listenCallback() {
-  var host = server.address().address;
-  var port = server.address().port;
-  console.log('Example app listening at http://' + host + ':' + port);
+    console.log = function(d) { //
+        log_file.write(util.format(d) + '\n');
+    };
 }
-
-console.log("runn")
