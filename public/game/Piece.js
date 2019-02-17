@@ -1,7 +1,8 @@
 class Piece  {
-    constructor(x, y, color, isNpc) {
+    constructor(x, y, color, isPlayer1) {
         // this.GHOST_COLOR = new color(0,255,0, 0.5);
-        this.isNpc = isNpc;
+        this.isNpc = !isPlayer1;
+        this.isPlayer1 = isPlayer1;
         this.color1 = color;
         this.move(x, y);
         this.possiblePlaysDrawn = false;
@@ -58,29 +59,29 @@ class Piece  {
         if (this.possiblePlaysDrawn){
             return;
         }
-
+        
         var fLContent, fRContent, yDir, xDir;
-        yDir = this.isNpc ? 1 : -1;
-        xDir = this.isNpc ? -1 : 1;
-
+        yDir = this.isPlayer1 ? -1 : 1;
+        xDir = this.isPlayer1 ? 1 : -1;
+        
         this.fLXY = {
             x: this.x - xDir,
             y: this.y + yDir
         }
-
+        
         this.fRXY = {
             x: this.x + xDir,
             y: this.y + yDir
         }
-
+        
         if (MouseHandler.validXY(this.fRXY.x, this.fRXY.y)){
             fLContent = map[this.fLXY.y][this.fLXY.x];
         }
-
+        
         if (MouseHandler.validXY(this.fLXY.x, this.fLXY.y)){
             fRContent = map[this.fRXY.y][this.fRXY.x];
         }
-
+        
         if (fLContent == GRID_CHAR){
             this.drawPiece(this.fLXY.x, this.fLXY.y, color(0,255,0, 50));
             this.possiblePlaysDrawn = true;

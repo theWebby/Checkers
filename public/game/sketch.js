@@ -6,7 +6,7 @@ const GRID_DRAW_SPEED = 0;
 const GRID_CHAR = '_';
 const TOTAL_LENGTH = TILE_SIDE_LENGTH * GRID_SIDE_LENGTH;
 const log = console.log;
-var player1, player2, map, gameSetup = false, player1sTurn = true;
+var player1, player2, map, gameSetup = false;
 
 async function setup() {
     createCanvas(TOTAL_LENGTH + 1, TOTAL_LENGTH + 1);
@@ -27,8 +27,8 @@ async function draw() {
 async function setupGame(){
     return _setTimeout(() => {
         map = new Board();
-        player1 = new Player(color(255, 0,0), false);
-        player2 = new Player(color(255, 255, 255), true);
+        player1 = new Player(color(255, 0,0), false, true);
+        player2 = new Player(color(255, 255, 255), true, false);
     }, 0)
 
 }

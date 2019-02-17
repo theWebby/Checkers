@@ -2,7 +2,7 @@ class Board {
     constructor(){
         this.initilized = false;
         this.map = [];
-        this.isPlayer1sTurn = true;
+        this.isPlayer1sTurn = false;
         this.needsUpdate = false;
         this.setupMap();
         this.lastHoverPiece;
@@ -82,7 +82,7 @@ class Board {
 
     detectHover() {
         var selectedContent = this.getMouseOverGrid();
-
+        
         if (!selectedContent){
             return;
         }
@@ -90,15 +90,21 @@ class Board {
             this.clearLastHover()
             return;
         }
-
+        
         //content must be piece
         if(this.lastHoverPiece == selectedContent){
             return;
         }
-
         
-        this.clearLastHover(selectedContent)
-        selectedContent.drawPossiblePlays(this.map);
+        if(this.isPlayer1sTurn && selectedContent.isPlayer1){
+            this.clearLastHover(selectedContent)
+            selectedContent.drawPossiblePlays(this.map);
+        }
+
+        if(!this.isPlayer1sTurn && !selectedContent.isPlayer1){
+            this.clearLastHover(selectedContent)
+            selectedContent.drawPossiblePlays(this.map);
+        }
 
     }
 
