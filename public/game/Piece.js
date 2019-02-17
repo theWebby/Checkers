@@ -26,13 +26,47 @@ class Piece  {
         this.draw();
     }
 
-    draw() {
-        this.drawPiece(this.x, this.y, this.color1);
+    draw(size) {
+        if(!size) { size = 1 }
+
+        this.drawPiece(this.x, this.y, this.color1, size);
+    }
+    
+    drawPiece(x, y, color, size) {
+        if(!size) { size = 1 }
+        
+        fill(color);
+        ellipse(x * TILE_SIDE_LENGTH + (TILE_SIDE_LENGTH / 2), y * TILE_SIDE_LENGTH + (TILE_SIDE_LENGTH / 2), (TILE_SIDE_LENGTH - 20) * size, (TILE_SIDE_LENGTH - 20) * size);
     }
 
-    drawPiece(x, y, color) {
-        fill(color);
-        ellipse(x * TILE_SIDE_LENGTH + (TILE_SIDE_LENGTH / 2), y * TILE_SIDE_LENGTH + (TILE_SIDE_LENGTH / 2), TILE_SIDE_LENGTH - 20, TILE_SIDE_LENGTH - 20);
+    drawSelected(){
+        this.draw(1.5);
+    }
+
+    removeSelected(map){
+        //because selected ones overlap, must redraw all around current square
+        this.resetTile(this.x, this.y, map);
+        this.resetTile(this.x, this.y + 1, map);
+        this.resetTile(this.x, this.y - 1, map);
+        this.resetTile(this.x + 1, this.y, map);
+        this.resetTile(this.x - 1, this.y, map);
+    }
+
+    resetTile(x, y, map){
+        if (!MouseHandler.validXY(x, y)){
+            return;
+        }
+        
+        var tileContent = map[y][x]
+        
+        if (tileContent == GRID_CHAR){
+            Board.drawTile(x, y, tileColor(x, y))
+            return
+        }
+        
+        // console.log(tileContent)
+        Board.drawTile(x, y, tileColor(x, y))
+        tileContent.draw();
     }
 
     removePossiblePlays(){

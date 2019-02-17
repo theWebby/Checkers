@@ -2,10 +2,11 @@ class Board {
     constructor(){
         this.initilized = false;
         this.map = [];
-        this.isPlayer1sTurn = false;
+        this.isPlayer1sTurn = true;
         this.needsUpdate = false;
         this.setupMap();
         this.lastHoverPiece;
+        this.lastSelectedPiece;
     }
     
     setupMap() {
@@ -68,7 +69,20 @@ class Board {
 
     mousePressHandler(){
         this.selectedPiece((selectedPiece) => {
-            this.movePiece(selectedPiece, 1, -1)
+            if(!this.isCurrentPlayersPiece(selectedPiece)){
+                return
+            }
+
+            if (this.lastSelectedPiece == selectedPiece){
+                return
+            }
+
+            if (this.lastSelectedPiece){
+                this.lastSelectedPiece.removeSelected(this.map);
+            }
+
+            selectedPiece.drawSelected(this.map)
+            this.lastSelectedPiece = selectedPiece;
         })
     }
 
@@ -95,17 +109,21 @@ class Board {
         if(this.lastHoverPiece == selectedContent){
             return;
         }
-        
-        if(this.isPlayer1sTurn && selectedContent.isPlayer1){
+    
+        if(this.isCurrentPlayersPiece(selectedContent)){
             this.clearLastHover(selectedContent)
-            selectedContent.drawPossiblePlays(this.map);
+            selectedContent.drawPossiblePlays(this.map)
         }
+    }
 
-        if(!this.isPlayer1sTurn && !selectedContent.isPlayer1){
-            this.clearLastHover(selectedContent)
-            selectedContent.drawPossiblePlays(this.map);
+    isCurrentPlayersPiece(selectedPiece){
+        if(this.isPlayer1sTurn && selectedPiece.isPlayer1){
+            return true;
         }
-
+        if(!this.isPlayer1sTurn && !selectedPiece.isPlayer1){
+            return true
+        }
+        return false;
     }
 
     movePiece(selectedPiece, dx, dy){
