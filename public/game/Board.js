@@ -19,13 +19,16 @@ class Board {
 
     printMapConsole(){
         var stringBuilder = "";
+        
+        console.log("__________________");
         for (var y = 0; y < GRID_SIDE_LENGTH; y++){
             for (var x = 0; x < GRID_SIDE_LENGTH; x++){
-                stringBuilder = stringBuilder + this.map[y][x]
+                stringBuilder = stringBuilder + (typeof this.map[y][x] == "object" ? 'o' : this.map[y][x])
             }
             console.log(stringBuilder + "\t\t\t" + Math.random())
             stringBuilder = "";
         }
+        console.log("__________________");
     }
 
     static drawTile(x, y, color) {
@@ -68,12 +71,27 @@ class Board {
     }
 
     mousePressHandler(){
+        this.handleSelectPiece();
+
+        if (this.lastSelectedPiece){
+            this.handleMoveEvent();
+        }
+    }
+
+    handleMoveEvent(){
+        var xy = MouseHandler.getMouseGridXY();
+        if (!xy.isValid) {return};
+        var selectedContent = this.map[xy.gridY][xy.gridX]
+        if (selectedContent != POSS_PLAY_CHAR){
+            return;
+        }
+
+        this.movePiece(this.lastSelectedPiece, xy.gridX, xy.gridY)
+    }
+
+    handleSelectPiece(){
         this.selectedPiece((selectedPiece) => {
             if(!this.isCurrentPlayersPiece(selectedPiece)){
-                return
-            }
-
-            if (this.lastSelectedPiece == selectedPiece){
                 return
             }
 
@@ -81,39 +99,48 @@ class Board {
                 this.lastSelectedPiece.removeSelected(this.map);
             }
 
+
+            if (this.lastSelectedPiece == selectedPiece){
+                this.lastSelectedPiece = null;
+                return
+            }
+
             selectedPiece.drawSelected(this.map)
             this.lastSelectedPiece = selectedPiece;
         })
     }
 
+    //todo:delete
     clearLastHover(newHoverPiece){
         if (this.lastHoverPiece){
-            this.lastHoverPiece.removePossiblePlays();
+            this.lastHoverPiece.removePossiblePlays(this.map);
         }
         
         this.lastHoverPiece = newHoverPiece;
     }
 
     detectHover() {
-        var selectedContent = this.getMouseOverGrid();
+        // var selectedContent = this.getMouseOverGrid();
         
-        if (!selectedContent){
-            return;
-        }
-        if (selectedContent == GRID_CHAR){
-            this.clearLastHover()
-            return;
-        }
+        // if (!selectedContent){
+        //     return;
+        // }
+        // if (selectedContent == GRID_CHAR){
+        //     this.clearLastHover()
+        //     return;
+        // }
         
-        //content must be piece
-        if(this.lastHoverPiece == selectedContent){
-            return;
-        }
+        // //content must be piece
+        // if(this.lastHoverPiece == selectedContent){
+        //     return;
+        // }
     
-        if(this.isCurrentPlayersPiece(selectedContent)){
-            this.clearLastHover(selectedContent)
-            selectedContent.drawPossiblePlays(this.map)
-        }
+        // if(this.isCurrentPlayersPiece(selectedContent)){
+        //     this.clearLastHover(selectedContent)
+        //     selectedContent.drawPossiblePlays(this.map)
+        // }
+
+
     }
 
     isCurrentPlayersPiece(selectedPiece){
@@ -126,16 +153,24 @@ class Board {
         return false;
     }
 
-    movePiece(selectedPiece, dx, dy){
+    movePiece(selectedPiece, newX, newY){
+        var dx = newX - selectedPiece.x;
+        var dy = newY - selectedPiece.y;
+
         // console.log(selectedPiece);
+        this.printMapConsole();
         this.map[selectedPiece.y][selectedPiece.x] = GRID_CHAR;
         this.map[selectedPiece.y + dy][selectedPiece.x + dx] = selectedPiece;
+        this.printMapConsole();
+        // console.log(this.map[selectedPiece.y + dy][selectedPiece.x + dx]);
 
         console.log("Move piece");
-        Board.drawTile(selectedPiece.x, selectedPiece.y, tileColor(selectedPiece.x, selectedPiece.y))
+        // Board.drawTile(selectedPiece.x, selectedPiece.y, tileColor(selectedPiece.x, selectedPiece.y))
         
-        selectedPiece.move(selectedPiece.x + dx, selectedPiece.y +dy);
+        selectedPiece.moveClean(selectedPiece.x + dx, selectedPiece.y +dy, this.map);
+        this.printMapConsole();
         this.needsUpdate = true;
+        this.lastSelectedPiece = null;
     }
 
     static drawGrid(slow) {

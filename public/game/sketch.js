@@ -4,6 +4,7 @@ const TILE_SIDE_LENGTH = 80;
 const GRID_SIDE_LENGTH = 8;
 const GRID_DRAW_SPEED = 0;
 const GRID_CHAR = '_';
+const POSS_PLAY_CHAR = 'x';
 const TOTAL_LENGTH = TILE_SIDE_LENGTH * GRID_SIDE_LENGTH;
 const log = console.log;
 var player1, player2, map, gameSetup = false;
@@ -16,11 +17,11 @@ async function setup() {
 }
 
 async function draw() {
-    if (!gameSetup){
-        return;
-    }
+    // if (!gameSetup){
+    //     return;
+    // }
 
-    map.detectHover();
+    // map.detectHover();
 }
 
 
