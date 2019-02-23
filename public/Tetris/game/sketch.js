@@ -23,11 +23,11 @@ function restart(){
 
 function keyPressed() {
     if (keyCode === LEFT_ARROW) {
-        console.log("left start")
         gameGrid.moveActiveShapeDir(-1);
-        console.log("left end")
     } else if (keyCode === RIGHT_ARROW) {
         gameGrid.moveActiveShapeDir(1)
+    } else if (keyCode === DOWN_ARROW) {
+        gameGrid.moveActiveShape();
     }
 }
 
