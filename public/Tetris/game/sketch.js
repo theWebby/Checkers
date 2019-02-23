@@ -28,6 +28,7 @@ function keyPressed() {
         gameGrid.moveActiveShapeDir(1)
     } else if (keyCode === DOWN_ARROW) {
         gameGrid.moveActiveShape();
+        gameGrid.draw();
     }
 }
 
