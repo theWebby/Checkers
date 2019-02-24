@@ -28,10 +28,39 @@ class Shape {
         if (!this.validRotation(rotatedMap)){
             return false;
         }
+        if(this.overLap(rotatedMap)){
+            return false;
+        }
 
         this.removeFromGridMap();
         this.map = rotatedMap;
         this.placeOnGridMap(this);
+    }
+
+    overLap(newMap){
+        for (var y = 0; y < newMap.length; y++){
+            for (var x = 0; x < newMap[y].length; x++){
+                if(!Grid.validXY(this.gridMapX + x, this.gridMapY + y)){
+                    continue;
+                }
+
+                console.log('grid this', (this.gridMap[this.gridMapY + y][this.gridMapX + x]) != this);
+                console.log('grid', (this.gridMap[this.gridMapY + y][this.gridMapX + x]) == C_BLOCK);
+
+                console.log('map', (newMap[y][x]) == C_BLOCK);
+
+                if ((this.gridMap[this.gridMapY + y][this.gridMapX + x]) != this){
+                    console.log('here', (this.gridMap[this.gridMapY + y][this.gridMapX + x]))
+                }
+
+                if ((this.gridMap[this.gridMapY + y][this.gridMapX + x] != this && (this.gridMap[this.gridMapY + y][this.gridMapX + x].char == C_BLOCK))
+                  &&(newMap[y][x] == C_BLOCK)){
+                    console.log("OVERLAP")
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     rotateMatrix(matrix) {

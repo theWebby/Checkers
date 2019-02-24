@@ -2,6 +2,7 @@ class Grid {
     constructor() {
         this._initMap();
         this.activeShape = new Shape(this.map);
+        this.movingRows = false;
     }
 
     _initMap(){
@@ -28,8 +29,12 @@ class Grid {
             }
 
             if (rowComplete){
+                this.activeShape.removeFromGridMap();
                 this.removeRow(y);
                 this.moveRowsDownFrom(y);
+                this.activeShape.gridMapY--;
+                this.activeShape.placeOnGridMap(this.activeShape);
+                this.draw();
             }
         }
     }
@@ -50,6 +55,7 @@ class Grid {
     }
 
     moveActiveShapeDir(dir){
+        
         if (this.activeShapeCanMoveX(dir)){
             this.activeShape.moveX(dir);
             this.draw();
@@ -57,6 +63,7 @@ class Grid {
     }
 
     moveActiveShape(){
+
         if (this.activeShapeCanMoveDown()){
             this.activeShape.moveDown();
         }
