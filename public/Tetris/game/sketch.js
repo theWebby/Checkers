@@ -1,6 +1,6 @@
-const STEP_INTERVAL = 200;
-const MAP_HEIGHT = 15;
-const MAP_WIDTH = 8;
+const STEP_INTERVAL = 300;
+const MAP_HEIGHT = 20;
+const MAP_WIDTH = 10;
 const TILE_WIDTH = 30;
 const C_BLANK = ' ';
 const C_BLOCK = 'X';

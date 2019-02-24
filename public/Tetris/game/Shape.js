@@ -2,7 +2,7 @@ class Shape {
     constructor(gridMap){
         score += 5;
         this.char = C_BLOCK;
-        this.color = color(random(100, 255),random(100, 255),random(100, 255));
+        this.color = color(colorBox[Math.floor(Math.random() * colorBox.length)])
         this.gridMap = gridMap;
         this.map = shapeBox[Math.floor(Math.random() * shapeBox.length)];
         this.gridMapX = Math.floor(Math.random() * (MAP_WIDTH - this.map[0].length));
