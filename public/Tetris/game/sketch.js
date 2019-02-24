@@ -1,7 +1,7 @@
-const STEP_INTERVAL = 300;
-const MAP_HEIGHT = 20;
-const MAP_WIDTH = 10;
-const TILE_WIDTH = 30;
+const STEP_INTERVAL = 10;
+const MAP_HEIGHT = 15;
+const MAP_WIDTH = 7;
+const TILE_WIDTH = 60;
 const C_BLANK = ' ';
 const C_BLOCK = 'X';
 var gameStepCount = 0;
@@ -53,8 +53,14 @@ function nextGameStep(){
         if (this.gameOver){
             console.log("Game Over")
             var gameOverString = "GAME OVER\n\nScore: " + score;
-            alert(gameOverString); 
-            this.gamePaused = true;
+            var name = prompt('GAME OVER! \n\n You scored ' + score + '\n\n Please enter your name to appear on the leaderboard.');
+            if(name == null){
+                location.reload();
+            }
+            else{
+                ScoreBoard.setHighScore(name == '' ? 'Anon' :name, score)
+                this.gamePaused = true;
+            }
         }
         nextGameStep();
     }, STEP_INTERVAL)

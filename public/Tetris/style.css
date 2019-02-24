@@ -14,3 +14,11 @@ body {
 canvas {
     margin: 0 auto;
 }
+
+#high-scores-container {
+    margin: 0 auto;
+}
+
+#high-scores {
+    padding-left: 25px;
+}
