@@ -174,7 +174,7 @@ class Grid {
     doFill(c){
         switch (c){
             case C_BLANK:
-                fill(255, 255, 255);                    
+                fill(40, 40, 40);                    
             break
             default:
                 fill(c.color);
