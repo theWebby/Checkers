@@ -1,6 +1,6 @@
-const STEP_INTERVAL = 800;
-const MAP_HEIGHT = 10;
-const MAP_WIDTH = 5;
+const STEP_INTERVAL = 200;
+const MAP_HEIGHT = 15;
+const MAP_WIDTH = 8;
 const TILE_WIDTH = 30;
 const C_BLANK = ' ';
 const C_BLOCK = 'X';
@@ -29,6 +29,9 @@ function keyPressed() {
     } else if (keyCode === DOWN_ARROW) {
         gameGrid.moveActiveShape();
         gameGrid.draw();
+    } else if (keyCode === UP_ARROW) {
+        gameGrid.activeShape.rotate();
+        gameGrid.draw();
     }
 }
 
@@ -49,7 +52,8 @@ function nextGameStep(){
         this.gameStep();
         if (this.gameOver){
             console.log("Game Over")
-            console.log("Score: ", score) 
+            var gameOverString = "GAME OVER\n\nScore: " + score;
+            alert(gameOverString); 
             this.gamePaused = true;
         }
         nextGameStep();

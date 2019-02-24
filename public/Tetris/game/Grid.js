@@ -114,9 +114,6 @@ class Grid {
             var count = 0;
             
             if (mapX + dir >= MAP_WIDTH || mapX + dir < 0){
-                console.log(this.activeShape.gridMapX);
-                console.log(dir);
-                
                 return false;
             }
             
@@ -124,14 +121,13 @@ class Grid {
             count = 0;
             while ((this.activeShape.map[i][colIndex - count] != C_BLOCK)) {
                 dir > 0 ? count++ : count--;
-                console.log(count)
+                console.log('whiile', count)
             }
             
             if(mapX + dir - count >= MAP_WIDTH || mapX + dir < 0){
                 return false;
             }
             
-            console.log(mapY);
             if (Grid.validXY(mapX + dir - count, mapY)){
                 if (this.map[mapY][mapX + dir - count] != C_BLANK){
                     return false;
@@ -184,6 +180,18 @@ class Grid {
         }
         
         if (y < 0 || x < 0){
+            return false    
+        }
+
+        return true;
+    }
+
+    static validXYRotation(x, y){
+        if (y >= MAP_HEIGHT || x >= MAP_WIDTH){
+            return false;
+        }
+        
+        if (x < 0){
             return false    
         }
 
