@@ -1,4 +1,4 @@
-const STEP_INTERVAL = 10;
+const STEP_INTERVAL = 370;
 const MAP_HEIGHT = 15;
 const MAP_WIDTH = 7;
 const TILE_WIDTH = 60;
