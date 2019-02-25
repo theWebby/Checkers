@@ -49,6 +49,7 @@ class Grid {
     }
 
     removeRow(y){
+        score+= 15;
         for (var x = 0; x < MAP_WIDTH; x++){
             this.map[y][x] = C_BLANK;
         }

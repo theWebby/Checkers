@@ -1,7 +1,7 @@
 const STEP_INTERVAL = 370;
-const MAP_HEIGHT = 15;
-const MAP_WIDTH = 7;
-const TILE_WIDTH = 60;
+const MAP_HEIGHT = 20;
+const MAP_WIDTH = 10;
+const TILE_WIDTH = 40;
 const C_BLANK = ' ';
 const C_BLOCK = 'X';
 var gameStepCount = 0;
@@ -69,7 +69,12 @@ function nextGameStep(){
 function gameStep() {   
     this.gameGrid.moveActiveShape();
     this.gameGrid.draw();
+    updateCurrentScore();
     this.gameGrid.checkRows();
+}
+
+function updateCurrentScore(){
+    document.getElementById("current-score").innerHTML = "Current Score: " + score
 }
 
 
