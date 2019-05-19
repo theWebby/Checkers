@@ -70,12 +70,12 @@ class Board {
         }
     }
 
+    //todo: improve
     mousePressHandler(){
-        this.handleSelectPiece();
-
         if (this.lastSelectedPiece){
             this.handleMoveEvent();
         }
+        this.handleSelectPiece();
     }
 
     handleMoveEvent(){
@@ -87,6 +87,7 @@ class Board {
         }
 
         this.movePiece(this.lastSelectedPiece, xy.gridX, xy.gridY)
+        this.isPlayer1sTurn = !this.isPlayer1sTurn;
     }
 
     handleSelectPiece(){
