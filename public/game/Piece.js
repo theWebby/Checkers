@@ -22,33 +22,27 @@ class Piece  {
             bLXY: {},
             bRXY: {} 
         }
+        this.otherNeighbors = []
         this.move(x, y);
         this.isKing = false;
     }
 
-    moveClean(x, y, map){
+    async moveClean(x, y, map){
         this.resetOverlap(map)
-        this.dontClearSquareYoureMovingToo(x, y);
-        this.removePossiblePlays(map);
+        await this.dontClearSquareYoureMovingToo(x, y);
+        await this.removePossiblePlays(map);
         this.move(x, y);
     }
 
-    dontClearSquareYoureMovingToo(x, y){
-        //dont clear square you are moving too
-        if (this.neighbors.fLXY && (this.neighbors.fLXY.x == x && this.neighbors.fLXY.y == y)){
-            this.neighbors.fLXY = null;
-        }
-        if (this.neighbors.fRXY && (this.neighbors.fRXY.x == x && this.neighbors.fRXY.y == y)){
-            this.neighbors.fRXY = null;
-        }
+    async dontClearSquareYoureMovingToo(x, y){
+        console.log("len", x, y)
+        this.otherNeighbors = await this.otherNeighbors.filter(neighbor => neighbor.x != x || neighbor.y != y);        
+        console.log("len", this.otherNeighbors.length)
     }
     
     move(x, y) {
         this.x = x;
         this.y = y;
-        // setTimeout(() => {this.draw()}, 50);
-
-        this.dontClearSquareYoureMovingToo();
         this.draw();
     }
 
@@ -71,7 +65,6 @@ class Piece  {
     }
 
     removeSelected(map){
-        //because selected ones overlap, must redraw all around current square
         this.resetOverlap(map)
         this.removePossiblePlays(map);
     }
@@ -101,15 +94,23 @@ class Piece  {
         tileContent.draw();
     }
 
-    removePossiblePlays(map){
-        if(!this.possiblePlaysDrawn){
-            return;
-        }
-
-        if (this.neighbors.fRXY) { this.removePossiblePlay(this.neighbors.fRXY, map) };
-        if (this.neighbors.fLXY) { this.removePossiblePlay(this.neighbors.fLXY, map) };
-
-        this.possiblePlaysDrawn = false;
+    async removePossiblePlays(map){
+        return new Promise((resolve, reject) => {
+            if(!this.possiblePlaysDrawn){
+                return;
+            }
+    
+            // if (this.neighbors.fRXY) { this.removePossiblePlay(this.neighbors.fRXY, map) };
+            // if (this.neighbors.fLXY) { this.removePossiblePlay(this.neighbors.fLXY, map) };
+    
+            this.otherNeighbors.forEach(neighbor => {
+                this.removePossiblePlay(neighbor, map)
+            });
+    
+            this.otherNeighbors = []
+            this.possiblePlaysDrawn = false;
+            resolve();
+        })
     }
 
     removePossiblePlay(xy, map){ 
@@ -152,26 +153,11 @@ class Piece  {
         this.neighbors.fRXY = this.getLookCoordinates(lookDirs.FRONT.RIGHT, 1)
         
         if (this.neighbors.fLXY){
-            this.drawPossiblePlay(this.neighbors.fLXY, map);
+            this.drawPossiblePlay(this.neighbors.fLXY, lookDirs.FRONT.LEFT, {}, map);
         }
         if (this.neighbors.fRXY){
-            this.drawPossiblePlay(this.neighbors.fRXY, map);
+            this.drawPossiblePlay(this.neighbors.fRXY, lookDirs.FRONT.RIGHT, {}, map);
         }
-        // if (MouseHandler.validXY(this.neighbors.fRXY.x, this.neighbors.fRXY.y)){
-        //     var fRContent = map[this.neighbors.fRXY.y][this.neighbors.fRXY.x];
-        // }
-        
-        // if (MouseHandler.validXY(this.neighbors.fLXY.x, this.neighbors.fLXY.y)){
-        //     var fLContent = map[this.neighbors.fLXY.y][this.neighbors.fLXY.x];
-        // }
-        
-        // if (fLContent == GRID_CHAR){
-        //     this.drawPossiblePlay(this.neighbors.fLXY.x, this.neighbors.fLXY.y, map);
-        // } else{ this.neighbors.fLXY = null; }
-        
-        // if(fRContent == GRID_CHAR){
-        //     this.drawPossiblePlay(this.neighbors.fRXY.x, this.neighbors.fRXY.y, map);     
-        // } else { this.neighbors.fRXY = null; }
     }
     
     drawPossiblePlaysBack(map){
@@ -179,16 +165,16 @@ class Piece  {
         this.neighbors.bRXY = this.getLookCoordinates(lookDirs.BACK.RIGHT, 1)
         
         if (this.neighbors.bLXY){
-            this.drawPossiblePlay(this.neighbors.bLXY, map);
+            this.drawPossiblePlay(this.neighbors.bLXY, lookDirs.BACK.LEFT, {}, map);
         }
         if (this.neighbors.bRXY){
-            this.drawPossiblePlay(this.neighbors.bRXY, map);
+            this.drawPossiblePlay(this.neighbors.bRXY, lookDirs.BACK.RIGHT, {}, map);
         }
     }
     
-    drawPossiblePlay(coordinates, map){
-        console.log(map);
-        console.log(coordinates)
+    drawPossiblePlay(coordinates, lookDir, options,map){
+        options.jumpCount = options.jumpCount || 0;
+        options.depth = options.depth || 1;
 
         if (MouseHandler.validXY(coordinates.x, coordinates.y)){
             var content = map[coordinates.y][coordinates.x];
@@ -198,9 +184,19 @@ class Piece  {
             this.drawPiece(coordinates.x, coordinates.y, color(0,255,0, 50));
             map[coordinates.y][coordinates.x] = POSS_PLAY_CHAR;
             this.possiblePlaysDrawn = true;
-        } else { 
-            console.log("peice in the way")
-            this.neighbors.fLXY = null;
-            coordinates = null; }
+            this.otherNeighbors.push(coordinates);
+        } 
+        else if (content.isPlayer1 != this.isPlayer1){ 
+            if (options.jumpCount > 0){
+                return;
+            }
+            coordinates = null;             
+            options.depth++;
+            options.jumpCount++;
+            this.drawPossiblePlay(this.getLookCoordinates(lookDir, options.depth), lookDir, options, map)
+        }
+        else{
+            coordinates = null; 
+        }
     }
 }
