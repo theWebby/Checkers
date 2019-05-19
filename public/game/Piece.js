@@ -175,9 +175,13 @@ class Piece  {
     drawPossiblePlay(coordinates, lookDir, options,map){
         options.jumpCount = options.jumpCount || 0;
         options.depth = options.depth || 1;
+        options.lastWasPlayer = options.lastWasPlayer || false;
 
         if (MouseHandler.validXY(coordinates.x, coordinates.y)){
             var content = map[coordinates.y][coordinates.x];
+        }
+        else{
+            return
         }
 
         if(content == GRID_CHAR){
@@ -185,15 +189,21 @@ class Piece  {
             map[coordinates.y][coordinates.x] = POSS_PLAY_CHAR;
             this.possiblePlaysDrawn = true;
             this.otherNeighbors.push(coordinates);
+
+            if (options.jumpCount > 0){
+                options.depth++;
+                options.lastWasPlayer = false;
+                this.drawPossiblePlay(this.getLookCoordinates(lookDir, options.depth), lookDir, options, map)
+            }
         } 
         else if (content.isPlayer1 != this.isPlayer1){ 
-            if (options.jumpCount > 0){
-                return;
-            }
             coordinates = null;             
             options.depth++;
             options.jumpCount++;
             this.drawPossiblePlay(this.getLookCoordinates(lookDir, options.depth), lookDir, options, map)
+
+            options.lastWasPlayer = true;
+            if (options.lastWasPlayer){return}
         }
         else{
             coordinates = null; 
