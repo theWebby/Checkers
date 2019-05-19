@@ -206,26 +206,29 @@ class Piece  {
     drawPossiblePlay(coordinates, lookDir, options,map){
         options.jumpCount = options.jumpCount || 0;
         options.depth = options.depth || 1;
-        options.lastWasPlayer = options.lastWasPlayer || false;
+        options.lastWasPlayer = options.lastWasPlayer;
 
         if (MouseHandler.validXY(coordinates.x, coordinates.y)){
             var content = map[coordinates.y][coordinates.x];
         }
-        else{
-            return
-        }
+        else{ return }
 
         if(content == GRID_CHAR){
+            if (options.lastWasPlayer == false){ 
+                return 
+            }
 
             this.drawPiece(coordinates.x, coordinates.y, color(0,255,0, 50));
             map[coordinates.y][coordinates.x] = POSS_PLAY_CHAR;
             this.possiblePlaysDrawn = true;
             this.otherNeighbors.push(coordinates);
 
-            if (options.jumpCount > 0 && options.lastWasPlayer){
+            if (options.jumpCount > 0){
                 options.depth++;
                 options.lastWasPlayer = false;
+                console.log(options.lastWasPlayer)
                 this.drawPossiblePlay(this.getLookCoordinates(lookDir, options.depth), lookDir, options, map)
+
             }
         } 
         else if (content.isPlayer1 != this.isPlayer1){ 
@@ -234,7 +237,6 @@ class Piece  {
             options.jumpCount++;
             options.lastWasPlayer = true;
             this.drawPossiblePlay(this.getLookCoordinates(lookDir, options.depth), lookDir, options, map)
-            if (options.lastWasPlayer){return}
         }
         else{
             coordinates = null; 
