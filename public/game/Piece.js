@@ -103,7 +103,7 @@ class Piece  {
         this.drawPiece(x, y, tileColor(x, y))
     }
 
-    drawPossiblePlays(map){
+    drawPossiblePlays(map){        
         if (this.possiblePlaysDrawn){
             return;
         }
@@ -123,22 +123,22 @@ class Piece  {
         }
         
         if (MouseHandler.validXY(this.fRXY.x, this.fRXY.y)){
-            fLContent = map[this.fLXY.y][this.fLXY.x];
+            fRContent = map[this.fRXY.y][this.fRXY.x];
         }
         
         if (MouseHandler.validXY(this.fLXY.x, this.fLXY.y)){
-            fRContent = map[this.fRXY.y][this.fRXY.x];
+            fLContent = map[this.fLXY.y][this.fLXY.x];
         }
         
         if (fLContent == GRID_CHAR){
             this.drawPossiblePlay(this.fLXY.x, this.fLXY.y, map);
         } else{ this.fLXY = null; }
-
+        
         if(fRContent == GRID_CHAR){
             this.drawPossiblePlay(this.fRXY.x, this.fRXY.y, map);     
         } else { this.fRXY = null; }
     }
-
+    
     drawPossiblePlay(x, y, map){
         this.drawPiece(x, y, color(0,255,0, 50));
         map[y][x] = POSS_PLAY_CHAR;
