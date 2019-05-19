@@ -24,14 +24,45 @@ class Piece  {
         }
         this.otherNeighbors = []
         this.move(x, y);
-        this.isKing = false;
+        this.isKing = true;
     }
 
     async moveClean(x, y, map){
         this.resetOverlap(map)
         await this.dontClearSquareYoureMovingToo(x, y);
         await this.removePossiblePlays(map);
+        this.takePiece(x, y, map);
         this.move(x, y);
+    }
+
+    takePiece(x, y, map){
+        let dx = this.x - x;
+        let dy = this.y - y;
+
+        console.log(dx)
+        var xs = [], ys = [];
+
+        if (dx > 1 || dx < -1){
+            for (var i = this.x; i != x; dx < 0 ? i++ : i--){
+                console.log(i)
+                xs.push(i)
+            }            
+
+            for (var i = this.y; i != y; dy < 0 ? i++ : i--){
+                ys.push(i)
+            }
+            
+            for (var i = 0; i < xs.length; i = i + 2){
+                xs.splice(i, 1)
+                ys.splice(i, 1)
+                i--;
+            }
+
+            for (var i = 0; i < xs.length; i++){
+                map[ys[i]][xs[i]] = GRID_CHAR
+                this.resetTile(xs[i], ys[i], map)
+            }
+        }
     }
 
     async dontClearSquareYoureMovingToo(x, y){
@@ -185,12 +216,13 @@ class Piece  {
         }
 
         if(content == GRID_CHAR){
+
             this.drawPiece(coordinates.x, coordinates.y, color(0,255,0, 50));
             map[coordinates.y][coordinates.x] = POSS_PLAY_CHAR;
             this.possiblePlaysDrawn = true;
             this.otherNeighbors.push(coordinates);
 
-            if (options.jumpCount > 0){
+            if (options.jumpCount > 0 && options.lastWasPlayer){
                 options.depth++;
                 options.lastWasPlayer = false;
                 this.drawPossiblePlay(this.getLookCoordinates(lookDir, options.depth), lookDir, options, map)
@@ -200,9 +232,8 @@ class Piece  {
             coordinates = null;             
             options.depth++;
             options.jumpCount++;
-            this.drawPossiblePlay(this.getLookCoordinates(lookDir, options.depth), lookDir, options, map)
-
             options.lastWasPlayer = true;
+            this.drawPossiblePlay(this.getLookCoordinates(lookDir, options.depth), lookDir, options, map)
             if (options.lastWasPlayer){return}
         }
         else{
